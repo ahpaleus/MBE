@@ -1,0 +1,23 @@
+Username -> abcdef
+Haslo -> 
+To jest clue programu, sprawdza, a w $ebp-0x10 jest jakaś tam wartość po różnych przejściach, która dla naszego stringa ma wartosć: 0x5f1ae2
+Zaś najważniejsze to skumać, że eax to jest po prostu wartość naszego tej powyższej wartości w zwykłej notacji
+
+>>> 0x5f1ae2
+6232802
+
+
+=> 0x8048b31 <auth+290>:	cmp    eax,DWORD PTR [ebp-0x10]
+
+
+na poczatku programu po wpisaniu seriala:
+   0x8048c1e <main+218>:	mov    eax,DWORD PTR [esp+0x18]
+
+czyli 0x5f1ae2
+
+i odklada sie go na stosie:
+=> 0x8048c22 <main+222>:	mov    DWORD PTR [esp+0x4],eax
+(w IDA arg4)
+
+mov     eax, [ebp+arg_4] 
+cmp     eax, [ebp+var_10] ebp+var_10 -> wartosc po roznych operacjach, eax -> ta wartosc w hexie
