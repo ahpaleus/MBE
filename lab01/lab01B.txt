@@ -1,0 +1,65 @@
+lab1B@warzone:/levels/lab01$ ./lab1B
+.---------------------------.
+|-- RPISEC - CrackMe v2.0 --|
+'---------------------------'
+
+Password: 322424827
+$ id
+uid=1003(lab1B) gid=1004(lab1B) euid=1004(lab1A) groups=1005(lab1A),1001(gameuser),1004(lab1B)
+$
+
+Trzeba zauważyć, że wartość musi być różnicą mniejszą od 0x15 między 0x1337d00d-*input* < 0x15
+zeby przeszlo 'na lewa strone' w IDA (nie wybieralo tego z losowaniem).
+Pozniej jest schl i mov eax.. gdzie wczesniej dodaje sie wartosc 0x80.
+
+Generalnie zrobilem to tak:
+>>> hex(0x1337d00d-0x1)
+'0x1337d00c'
+>>> hex(0x1337d00d-0x2)
+'0x1337d00b'
+>>> hex(0x1337d00d-0x3)
+'0x1337d00a'
+>>> hex(0x1337d00d-0x4)
+'0x1337d009'
+>>> hex(0x1337d00d-0x5)
+'0x1337d008'
+>>> hex(0x1337d00d-0x6)
+'0x1337d007'
+>>> hex(0x1337d00d-0x7)
+'0x1337d006'
+>>> hex(0x1337d00d-0x8)
+'0x1337d005'
+>>> hex(0x1337d00d-0x9)
+'0x1337d004'
+>>> hex(0x1337d00d-0x10)
+'0x1337cffd'
+>>> hex(0x1337d00d-0x11)
+'0x1337cffc'
+>>> hex(0x1337d00d-0x12)
+'0x1337cffb'
+>>> hex(0x1337d00d-0x13)
+'0x1337cffa'
+>>> hex(0x1337d00d-0x14)
+'0x1337cff9'
+>>> hex(0x1337d00d-0x15)
+'0x1337cff8'
+
+w rezultacie:
+322424844
+322424843
+322424842
+322424841
+322424840
+322424839
+322424838
+322424837
+322424836
+322424829
+322424828
+322424827
+322424826
+322424825
+322424824
+
+$ cat .pass
+1337_3nCRyptI0n_br0 
