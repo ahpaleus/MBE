@@ -1,0 +1,21 @@
+Comparison:
+=> 0x80484d6 <check+82>:	cmp    DWORD PTR [ebp-0x8],0xf
+
+We need: $ebp-0x8 == 0xf (15).
+Writing 999 at each iteration:
+$ebp-0x8=0x09
+$ebp-0x8=0x12 (18)
+$ebp-0x8=0x1b (27)
+
+Each iteration is +9 (next number ->
+-> 1234
+1 iter: [1+0]+2
+2 iter: [1+2]+3
+3 iter: [1+2+3]+4
+, we need 3 iters and result 15 (5+5+5):
+555 to Password OK :)
+
+gameadmin@warzone:~$ ./crackme0x04
+IOLI Crackme Level 0x04
+Password: 555
+Password OK!

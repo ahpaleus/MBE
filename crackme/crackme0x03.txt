@@ -1,0 +1,16 @@
+gameadmin@warzone:~$ ./crackme0x03
+IOLI Crackme Level 0x03
+Password: 338724
+Password OK!!! :)
+
+IDA:
+cmp     eax, [ebp+arg_4]
+
+Address in memory, stop in GDB:
+break *0x08048477
+
+=> 0x8048477 <test+9>:	cmp    eax,DWORD PTR [ebp+0xc]
+
+Zobaczmy co jest pod tym ebp+0xc:
+gdb-peda$ x/w $ebp+0xc
+0xbffff6b4:	0x00052b24 == 338724

@@ -1,0 +1,34 @@
+IDA PRO 7.0:
+mov     dword ptr [esp], offset pass_1964
+offset pass_1964 ->
+.data:0804A040 pass_1964       db  77h ; w             ; DATA XREF: main+33↑o
+.data:0804A041                 db    0
+.data:0804A042                 db    0
+.data:0804A043                 db    0
+.data:0804A044                 db  30h ; 0
+.data:0804A045                 db    0
+.data:0804A046                 db    0
+.data:0804A047                 db    0
+.data:0804A048                 db  77h ; w
+.data:0804A049                 db    0
+.data:0804A04A                 db    0
+.data:0804A04B                 db    0
+.data:0804A04C                 db  67h ; g
+.data:0804A04D                 db    0
+.data:0804A04E                 db    0
+.data:0804A04F                 db    0
+.data:0804A050                 db  72h ; r
+.data:0804A051                 db    0
+.data:0804A052                 db    0
+.data:0804A053                 db    0
+.data:0804A054                 db  65h ; e
+.data:0804A055                 db    0
+.data:0804A056                 db    0
+.data:0804A057                 db    0
+.data:0804A058                 db  61h ; a
+.data:0804A059                 db    0
+.data:0804A05A                 db    0
+.data:0804A05B                 db    0
+.data:0804A05C                 db  74h ; t
+
+Password: w0wgreat

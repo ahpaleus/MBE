@@ -1,0 +1,13 @@
+IDA:
+cmp     [ebp+var_4], 149Ah
+mean:
+ 804842b:	81 7d fc 9a 14 00 00 	cmp    DWORD PTR [ebp-0x4],0x149a
+
+hex-> 0x149a == 5274
+password: 5274 
+
+scanf:
+mov     dword ptr [esp], offset aD ; "%d"
+call    _scanf
+
+%d -> decimal

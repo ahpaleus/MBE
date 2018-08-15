@@ -1,0 +1,8 @@
+mmm@abc crackme $ strings crackme0x00a
+(...)
+Enter password:
+Congrats!
+Wrong!
+;*2$"
+g00dJ0B!
+Password: g00dJ0B!
