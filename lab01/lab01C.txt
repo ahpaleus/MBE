@@ -1,0 +1,21 @@
+Solution:
+lab1C@warzone:/levels/lab01$ ./lab1C
+-----------------------------
+--- RPISEC - CrackMe v1.0 ---
+-----------------------------
+
+Password: 5274
+
+Authenticated!
+$ id
+uid=1002(lab1C) gid=1003(lab1C) euid=1003(lab1B) groups=1004(lab1B),1001(gameuser),1003(lab1C)
+
+call    ___isoc99_scanf
+mov     eax, [esp+1Ch]
+cmp     eax, 149Ah
+jnz     short loc_8048724
+
+Porownuje czy wpisany string to 0x149a (5274).
+
+$ cat /home/lab1B/.pass
+n0_str1ngs_n0_pr0bl3m
