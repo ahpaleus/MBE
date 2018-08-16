@@ -1,2 +1,2 @@
 # MBE
-Modern Binary Exploitation
+Modern Binary Exploitation solutions.
