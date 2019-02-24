@@ -11,7 +11,7 @@ Lab | Topic
 [03](/lab03) | Shellcoding
 [04](/lab04) | Format Strings
 [05](lab05) | DEP and ROP
- | **ASLR always enabled from this point **
+**** | **ASLR always enabled from this point **
 [06](/lab06) | ASLR
 [07](/lab07) | Heap
 [08](/lab08) | Misc and Stack Cookies
