@@ -4,7 +4,7 @@ https://github.com/RPISEC/MBE
 
 ### Lab Breakdown
 Lab | Topic
---- | ----- | ----------------------
+--- | ----- |
 [01](/lab01) | Reverse Engineering
 [02](/lab02) | Memory Corruption
 [03](/lab03) | Shellcoding
