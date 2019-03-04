@@ -28,7 +28,5 @@ if(fd1 == 0 || fd2 == 0)
 Duplication:
 ```sh
 lab8C@warzone:/levels/lab08$ echo 'ABCDE_123' > /var/tmp/abc2.txt && ./lab8C -fn=/var/tmp/abc2.txt -fd=3
-"ABCDE_123
-" is lexicographically equivalent to "ABCDE_123
-"
+"ABCDE_123" is lexicographically equivalent to "ABCDE_123"
 ```
